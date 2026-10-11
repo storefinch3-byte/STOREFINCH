@@ -1,0 +1,32 @@
+# Dependencias
+node_modules/
+
+# Arquivos gerados pelo Next.js
+.next/
+out/
+build/
+
+# Configuracoes privadas e chaves
+.env
+.env.*
+!.env.example
+
+# Configuracoes da Vercel
+.vercel/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos TypeScript gerados
+*.tsbuildinfo
+next-env.d.ts
+
+# Backups locais do codigo - nao publicar
+app/page-*.txt*
