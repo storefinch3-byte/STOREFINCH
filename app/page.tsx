@@ -133,7 +133,9 @@ const [reportMonth, setReportMonth] = useState(hojeLocal().slice(0, 7));
     supabase.auth.getUser()
       .then(({ data, error }) => {
         if (error) {
-          setError('Não foi possível verificar a sessão.');
+          if (error && error.name !== 'AuthSessionMissingError') {
+  setError('Não foi possível verificar a sessão.');
+}
         }
 
         setUser(data.user);
