@@ -200,7 +200,7 @@ const [reportMonth, setReportMonth] = useState(hojeLocal().slice(0, 7));
           await supabase
             .from('companies')
             .select('id, name')
-            .eq('id', membership.company_id)
+            .eq('id', (membership as { company_id: string }).company_id)
             .maybeSingle();
 
         if (companyError) throw companyError;
@@ -340,10 +340,10 @@ const [reportMonth, setReportMonth] = useState(hojeLocal().slice(0, 7));
         return;
       }
 
-      const { data: companyId, error: createError } =
-        await supabase.rpc('create_company', {
-          company_name: companyName.trim(),
-        });
+     const { data: companyId, error: createError } =
+  await (supabase as any).rpc('create_company', {
+    company_name: companyName.trim(),
+  });
 
       if (createError) throw createError;
       if (!companyId) throw new Error('O ID da empresa não foi retornado.');
@@ -393,7 +393,7 @@ if (editingTransactionId) {
   setMessage('');
 
   try {
-    const { data: updated, error: updateError } = await getSupabase()
+    const { data: updated, error: updateError } = await (getSupabase() as any)
       .from('transactions')
       .update({
         kind,
@@ -444,7 +444,7 @@ if (editingTransactionId) {
     setMessage('');
 
     try {
-      const { error: insertError } = await getSupabase()
+      const { error: insertError } = await (getSupabase() as any)
         .from('transactions')
         .insert({
           company_id: company.id,
@@ -551,7 +551,7 @@ async function excluirLancamento(transaction: Transaction) {
     setMessage('');
 
     try {
-      const { data, error: insertError } = await getSupabase()
+     const { data, error: insertError } = await (getSupabase() as any)
         .from('categories')
         .insert({
           company_id: company.id,
