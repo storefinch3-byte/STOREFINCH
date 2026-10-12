@@ -824,29 +824,107 @@ const accentButtonStyle: React.CSSProperties = {
         color: pageText,
       }}
     >
-      <header
+      
+<header
+  style={{
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 16,
+    flexWrap: 'wrap',
+    padding: '18px 22px',
+    marginBottom: 24,
+    background:
+      appearance.theme === 'dark' ? '#172033' : '#FFFFFF',
+    color: appearance.theme === 'dark' ? '#FFFFFF' : '#172033',
+    border: `1px solid ${borderColor}`,
+    borderRadius: 18,
+    boxShadow:
+      appearance.theme === 'dark'
+        ? '0 12px 30px rgba(0,0,0,0.16)'
+        : '0 8px 24px rgba(15,23,42,0.06)',
+  }}
+>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+    <div
+      style={{
+        width: 48,
+        height: 48,
+        flexShrink: 0,
+        borderRadius: 14,
+        background: appearance.accent_color,
+        color: appearance.primary_color,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: 800,
+        fontSize: 17,
+        letterSpacing: '-1px',
+      }}
+    >
+      SF
+    </div>
+
+    <div>
+      <h1
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: 16,
-          flexWrap: 'wrap',
-          marginBottom: 24,
+          margin: '0 0 4px',
+          fontSize: 24,
+          letterSpacing: '-0.6px',
+          color: appearance.theme === 'dark' ? '#FFFFFF' : '#172033',
         }}
       >
-        <div>
-          <h1 style={{ marginBottom: 6 }}>Controle financeiro</h1>
-          <p style={{ margin: 0, color: '#64748b' }}>
-            STORE FINCH · Gestão financeira
-          </p>
-        </div>
+        Controle financeiro
+      </h1>
 
-        {user && (
-          <button onClick={sair} style={{ padding: '9px 14px' }}>
-            Sair da conta
-          </button>
-        )}
-      </header>
+      <p
+        style={{
+          margin: 0,
+          fontSize: 14,
+          color: appearance.theme === 'dark' ? '#CBD5E1' : '#64748B',
+        }}
+      >
+        {company?.name ?? 'STORE FINCH'} · Gestão financeira
+      </p>
+    </div>
+  </div>
+
+  <div
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      flexWrap: 'wrap',
+    }}
+  >
+    {user && (
+      <a
+        href="/configuracoes"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          padding: '10px 14px',
+          border: `1px solid ${borderColor}`,
+          borderRadius: buttonRadius,
+          background: surfaceBackground,
+          color: pageText,
+          textDecoration: 'none',
+          fontSize: 14,
+          fontWeight: 600,
+        }}
+      >
+        ⚙ Configurações
+      </a>
+    )}
+
+    {user && (
+      <button onClick={sair} style={primaryButtonStyle}>
+        Sair da conta
+      </button>
+    )}
+  </div>
+</header>
+
 
       {error && (
         <p
