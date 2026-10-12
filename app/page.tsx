@@ -122,6 +122,13 @@ const [filterEndDate, setFilterEndDate] = useState('');
 const [filterKind, setFilterKind] = useState('todos');
 const [filterCategoryId, setFilterCategoryId] = useState('todas');
 const [reportMonth, setReportMonth] = useState(hojeLocal().slice(0, 7));
+const [appearance, setAppearance] = useState({
+  primary_color: '#172033',
+  accent_color: '#E8B85B',
+  font_family: 'Arial',
+  theme: 'dark' as 'light' | 'dark' | 'system',
+  button_style: 'rounded' as 'rounded' | 'square' | 'pill',
+});
 
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newCategoryKind, setNewCategoryKind] =
@@ -584,6 +591,59 @@ async function excluirLancamento(transaction: Transaction) {
     }
   }
 
+useEffect(() => {
+  if (!company) return;
+
+const companyId = company.id;
+  let cancelled = false;
+
+  async function carregarAparencia() {
+    try {
+      const supabase = getSupabase() as any;
+
+      const { data, error } = await supabase
+        .from('company_settings')
+        .select(
+          'primary_color, accent_color, font_family, theme, button_style'
+        )
+       .eq('company_id', companyId)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (data && !cancelled) {
+        setAppearance({
+          primary_color: data.primary_color || '#172033',
+          accent_color: data.accent_color || '#E8B85B',
+          font_family: data.font_family || 'Arial',
+          theme:
+            data.theme === 'light' || data.theme === 'system'
+              ? data.theme
+              : 'dark',
+          button_style:
+            data.button_style === 'square' ||
+            data.button_style === 'pill'
+              ? data.button_style
+              : 'rounded',
+        });
+      }
+    } catch (err) {
+      console.error('Erro ao carregar a aparência:', err);
+
+      if (!cancelled) {
+        setError('Não foi possível carregar as preferências visuais.');
+      }
+    }
+  }
+
+  carregarAparencia();
+
+  return () => {
+    cancelled = true;
+  };
+}, [company]);
+
+
   const entradas = transactions
     .filter((item) => item.kind === 'entrada')
     .reduce((total, item) => total + Number(item.amount), 0);
@@ -601,6 +661,31 @@ async function excluirLancamento(transaction: Transaction) {
     .reduce((total, item) => total + Number(item.amount), 0);
 
   const saldo = entradas + aportes - saidas - retiradas;
+
+
+useEffect(() => {
+  const isDarkTheme = appearance.theme === 'dark';
+
+  const oldBackground = document.body.style.backgroundColor;
+  const oldColor = document.body.style.color;
+  const oldFont = document.body.style.fontFamily;
+
+  document.body.style.backgroundColor = isDarkTheme
+    ? '#111827'
+    : '#F8FAFC';
+
+  document.body.style.color = isDarkTheme
+    ? '#F9FAFB'
+    : '#172033';
+
+  document.body.style.fontFamily = appearance.font_family;
+
+  return () => {
+    document.body.style.backgroundColor = oldBackground;
+    document.body.style.color = oldColor;
+    document.body.style.fontFamily = oldFont;
+  };
+}, [appearance.theme, appearance.font_family]);
 
 
 const reportTransactions = transactions.filter((item) =>
@@ -675,14 +760,50 @@ const filteredTransactions = transactions.filter((item) => {
     return <main style={{ padding: 32 }}>Carregando...</main>;
   }
 
-  const cardStyle: React.CSSProperties = {
-    border: '1px solid #e5e7eb',
-    borderRadius: 12,
-    padding: 18,
-    background: '#fff',
-  };
+const isDark = appearance.theme === 'dark';
 
-  const inputStyle: React.CSSProperties = {
+const pageBackground = isDark ? '#111827' : '#F8FAFC';
+const pageText = isDark ? '#F9FAFB' : '#172033';
+const surfaceBackground = isDark ? '#1F2937' : '#FFFFFF';
+const borderColor = isDark ? '#374151' : '#E5E7EB';
+
+const buttonRadius =
+  appearance.button_style === 'pill'
+    ? 999
+    : appearance.button_style === 'square'
+      ? 4
+      : 10;
+
+const cardStyle: React.CSSProperties = {
+  border: `1px solid ${borderColor}`,
+  borderRadius: 12,
+  padding: 18,
+  background: surfaceBackground,
+  color: pageText,
+};
+ 
+
+ const primaryButtonStyle: React.CSSProperties = {
+  backgroundColor: appearance.primary_color,
+  color: '#FFFFFF',
+  border: 'none',
+  borderRadius: buttonRadius,
+  padding: '10px 16px',
+  fontFamily: appearance.font_family,
+  fontWeight: 600,
+  cursor: 'pointer',
+};
+
+const accentButtonStyle: React.CSSProperties = {
+  backgroundColor: appearance.accent_color,
+  color: '#172033',
+  border: 'none',
+  borderRadius: buttonRadius,
+  padding: '10px 16px',
+  fontFamily: appearance.font_family,
+  fontWeight: 600,
+  cursor: 'pointer',
+}; const inputStyle: React.CSSProperties = {
     display: 'block',
     width: '100%',
     padding: 10,
@@ -699,8 +820,8 @@ const filteredTransactions = transactions.filter((item) => {
         maxWidth: 1050,
         margin: '30px auto',
         padding: 20,
-        fontFamily: 'Arial, sans-serif',
-        color: '#172033',
+        fontFamily: appearance.font_family,
+        color: pageText,
       }}
     >
       <header
@@ -784,7 +905,11 @@ const filteredTransactions = transactions.filter((item) => {
               style={inputStyle}
             />
 
-            <button type="submit" disabled={sending}>
+            <button
+  type="submit"
+  disabled={sending}
+  style={primaryButtonStyle}
+>
               {sending ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
@@ -1032,7 +1157,11 @@ const filteredTransactions = transactions.filter((item) => {
                 style={inputStyle}
               />
 
-              <button type="submit" disabled={savingTransaction}>
+              <button
+  type="submit"
+  disabled={savingTransaction}
+  style={primaryButtonStyle}
+>
                {savingTransaction
   ? 'Salvando...'
   : editingTransactionId
@@ -1095,7 +1224,11 @@ const filteredTransactions = transactions.filter((item) => {
                 <option value="ambos">Receita e despesa</option>
               </select>
 
-              <button type="submit" disabled={savingCategory}>
+              <button
+  type="submit"
+  disabled={savingCategory}
+  style={primaryButtonStyle}
+>
                 {savingCategory ? 'Salvando...' : 'Cadastrar categoria'}
               </button>
             </form>
