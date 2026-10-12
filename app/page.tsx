@@ -803,16 +803,46 @@ const accentButtonStyle: React.CSSProperties = {
   fontFamily: appearance.font_family,
   fontWeight: 600,
   cursor: 'pointer',
-}; const inputStyle: React.CSSProperties = {
-    display: 'block',
-    width: '100%',
-    padding: 10,
-    marginTop: 6,
-    marginBottom: 14,
-    border: '1px solid #cbd5e1',
-    borderRadius: 6,
-    boxSizing: 'border-box',
-  };
+};
+const editActionStyle: React.CSSProperties = {
+  background: surfaceBackground,
+  color: pageText,
+  border: `1px solid ${borderColor}`,
+  borderRadius: buttonRadius,
+  padding: '7px 12px',
+  fontFamily: appearance.font_family,
+  fontSize: 13,
+  fontWeight: 600,
+  cursor: 'pointer',
+};
+
+const deleteActionStyle: React.CSSProperties = {
+  background: '#FEF2F2',
+  color: '#B91C1C',
+  border: '1px solid #FECACA',
+  borderRadius: buttonRadius,
+  padding: '7px 12px',
+  fontFamily: appearance.font_family,
+  fontSize: 13,
+  fontWeight: 600,
+  cursor: 'pointer',
+};const inputStyle: React.CSSProperties = {
+  display: 'block',
+  width: '100%',
+  minHeight: 42,
+  padding: '11px 13px',
+  marginTop: 6,
+  marginBottom: 16,
+  border: `1px solid ${borderColor}`,
+  borderRadius: 10,
+  boxSizing: 'border-box',
+  background: surfaceBackground,
+  color: pageText,
+  fontFamily: appearance.font_family,
+  fontSize: 14,
+  transition: 'border-color 150ms ease',
+};
+
 
   return (
     <main
@@ -1569,13 +1599,13 @@ const accentButtonStyle: React.CSSProperties = {
     editingTransactionId !== null ||
     deletingTransactionId !== null
   }
-  style={{ marginRight: 8 }}
+  style={{ ...editActionStyle, marginRight: 8 }}
 >
   Editar
 </button>
 <button
     onClick={() => excluirLancamento(item)}
-    disabled={deletingTransactionId !== null}
+    disabled={deletingTransactionId !== null}style={deleteActionStyle}
   >
     {deletingTransactionId === item.id ? 'Excluindo...' : 'Excluir'}
   </button>
