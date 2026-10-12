@@ -926,7 +926,92 @@ const accentButtonStyle: React.CSSProperties = {
 </header>
 
 
-      {error && (
+      <div
+  style={{
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 24,
+    flexWrap: 'wrap',
+  }}
+>
+  {user && (
+    <aside
+      style={{
+        flex: '0 1 220px',
+        minWidth: 190,
+        position: 'sticky',
+        top: 20,
+        background: surfaceBackground,
+        color: pageText,
+        border: `1px solid ${borderColor}`,
+        borderRadius: 16,
+        padding: 16,
+        boxSizing: 'border-box',
+      }}
+    >
+      <h3 style={{ margin: '4px 0 16px' }}>Navegação</h3>
+
+      <nav style={{ display: 'grid', gap: 8 }}>
+        {[
+          { label: 'Painel', href: '#overview', icon: '⌂' },
+          { label: 'Resumo mensal', href: '#monthly', icon: '▤' },
+          { label: 'Lançamentos', href: '#new-transaction', icon: '+' },
+          { label: 'Categorias', href: '#categories', icon: '◈' },
+          { label: 'Histórico', href: '#history', icon: '↕' },
+        ].map((item) => (
+          <a
+            key={item.href}
+            href={item.href}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              padding: '11px 12px',
+              borderRadius: buttonRadius,
+              background: 'transparent',
+              border: `1px solid ${borderColor}`,
+              color: pageText,
+              textDecoration: 'none',
+              fontSize: 14,
+              fontWeight: 500,
+            }}
+          >
+            <span
+              style={{
+                color: appearance.accent_color,
+                fontSize: 18,
+                fontWeight: 700,
+              }}
+            >
+              {item.icon}
+            </span>
+            {item.label}
+          </a>
+        ))}
+
+        <a
+          href="/configuracoes"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '11px 12px',
+            borderRadius: buttonRadius,
+            background: appearance.primary_color,
+            color: '#FFFFFF',
+            textDecoration: 'none',
+            fontSize: 14,
+            fontWeight: 600,
+          }}
+        >
+          <span>⚙</span>
+          Configurações
+        </a>
+      </nav>
+    </aside>
+  )}
+
+  <div style={{ flex: '1 1 620px', minWidth: 0 }}>{error && (
         <p
           role="alert"
           style={{
@@ -1025,14 +1110,14 @@ const accentButtonStyle: React.CSSProperties = {
       ) : (
         <>
           <section style={{ ...cardStyle, marginBottom: 22 }}>
-            <h2 style={{ marginTop: 0 }}>{company.name}</h2>
+           <h2 id="overview" style={{ marginTop: 0 }}>{company.name}</h2>
             <p style={{ marginBottom: 0, color: '#64748b' }}>
               Conta conectada: {user.email}
             </p>
           </section>
 
 <section style={{ ...cardStyle, marginBottom: 22 }}>
-  <h2 style={{ marginTop: 0 }}>Resumo financeiro mensal</h2>
+ <h2 id="monthly" style={{ marginTop: 0 }}>Resumo financeiro mensal</h2>
 
   <label htmlFor="reportMonth">Mês do relatório</label>
   <input
@@ -1127,7 +1212,7 @@ const accentButtonStyle: React.CSSProperties = {
           </section>
 
           <section style={{ ...cardStyle, marginBottom: 22 }}>
-            <h2 style={{ marginTop: 0 }}>Novo lançamento</h2>
+            <h2 id="new-transaction" style={{ marginTop: 0 }}>Novo lançamento</h2>
 
             <form onSubmit={registrarLancamento}>
               <label htmlFor="kind">Tipo de lançamento</label>
@@ -1274,7 +1359,7 @@ const accentButtonStyle: React.CSSProperties = {
           </section>
 
           <section style={{ ...cardStyle, marginBottom: 22 }}>
-            <h2 style={{ marginTop: 0 }}>Categorias</h2>
+            <h2 id="categories" style={{ marginTop: 0 }}>Categorias</h2>
 
             <form onSubmit={registrarCategoria}>
               <label htmlFor="newCategoryName">Nome da categoria</label>
@@ -1411,7 +1496,7 @@ const accentButtonStyle: React.CSSProperties = {
 >
   Limpar filtros
 </button>
- <h2 style={{ marginTop: 0 }}>Histórico de lançamentos</h2>
+ <h2 id="history" style={{ marginTop: 0 }}>Histórico de lançamentos</h2>
 
             {loadingData ? (
               <p>Carregando lançamentos...</p>
@@ -1510,6 +1595,8 @@ const accentButtonStyle: React.CSSProperties = {
           </section>
         </>
       )}
+  </div>
+</div>
     </main>
   );
 }
